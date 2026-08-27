@@ -6,6 +6,8 @@ namespace MPhysicsSystem;
 /// </summary>
 public interface IPhysicsComponent
 {
+    StringName Name { get; set; }
+    NodePath GetPath();
     float DriverValueX { get; }
     float DriverValueY { get; }
     float DriverValueZ { get; }

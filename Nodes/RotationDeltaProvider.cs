@@ -4,7 +4,6 @@ namespace MPhysicsSystem;
 [GlobalClass]
 public partial class RotationDeltaProvider : PhysicsSystemComponent, IPhysicsComponent
 {
-    public Vector3 RotationDelta { get; set; } = Vector3.Zero;
 
     public override void _Ready()
     {
@@ -19,5 +18,6 @@ public partial class RotationDeltaProvider : PhysicsSystemComponent, IPhysicsCom
     {
         Vector3 localAngVel = state.Transform.Basis.Inverse() * state.AngularVelocity;
         RotationDelta = localAngVel * state.Step;
+        //GD.Print($"Rotation detla Y [{RotationDelta.Y}]");
     }
 }// EOF CLASS

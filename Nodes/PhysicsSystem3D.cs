@@ -9,7 +9,8 @@ namespace MPhysicsSystem;
 [GlobalClass]
 public partial class PhysicsSystem3D : RigidBody3D, IPhysicsSystem
 {
-   	protected List<IPhysicsComponent> components;
+    [Export] bool debug = false;
+    protected List<IPhysicsComponent> components;
     protected Transform3D initialTransform;
 
     /// <summary>
@@ -26,18 +27,18 @@ public partial class PhysicsSystem3D : RigidBody3D, IPhysicsSystem
     /// </summary>
 	public override void _IntegrateForces(PhysicsDirectBodyState3D state)
 	{
-
-		for (int i = 0; i < components.Count; i++)
+        //if (debug) { GD.Print($"System updating [{components.Count}] components"); }
+        for (int i = 0; i < components.Count; i++)
 		{
 			components[i].IntegrateForces(state, initialTransform);
 		}
-
 	}
 	/// <summary>
 	/// Allows registration of components into the system
 	/// </summary>
 	public void RegisterPhysicsComponent(IPhysicsComponent component)
 	{
-		components.Add(component);
+        if (debug) { GD.Print($"PhysicsSystem3D::RegisterPhysicsComponent() Registering [{component.Name}] [{component.GetPath()}]"); }
+        components.Add(component);
 	}
 }// EOF CLASS

@@ -4,12 +4,11 @@ namespace MPhysicsSystem;
 [GlobalClass]
 public partial class PositionConstraint : PhysicsSystemComponent, IPhysicsComponent
 {
-	[Export] private protected Vector3 minPosition = Vector3.Zero;
-	[Export] private protected Vector3 maxPosition = Vector3.Zero;
-
 	[Export] private protected bool lockX = false;
 	[Export] private protected bool lockY = false;
 	[Export] private protected bool lockZ = false;
+	[Export] private protected Vector3 minPosition = Vector3.Zero;
+	[Export] private protected Vector3 maxPosition = Vector3.Zero;
 
 	private protected Vector3 ogLocalPosition;
 
@@ -41,6 +40,7 @@ public partial class PositionConstraint : PhysicsSystemComponent, IPhysicsCompon
 			if (tr.Origin.Z < minPosition.Z) { tr.Origin.Z = minPosition.Z; state.LinearVelocity -= state.LinearVelocity.Project(-tr.Basis.Z); }
 			else if (tr.Origin.Z > maxPosition.Z) { tr.Origin.Z = maxPosition.Z; state.LinearVelocity -= state.LinearVelocity.Project(tr.Basis.Z); }
 		}
-		state.Transform = initialTransform * tr;
+        state.LinearVelocity = Vector3.Zero;
+        state.Transform = initialTransform * tr;
 	}
 }// EOF CLASS

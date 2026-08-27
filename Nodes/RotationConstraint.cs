@@ -37,14 +37,14 @@ public partial class RotationConstraint : PhysicsSystemComponent, IPhysicsCompon
         // 1. Get Angular Velocity in LOCAL space
         // Transform global angular velocity to local space to track rotation relative to object axes
         Vector3 localAngVel = state.Transform.Basis.Inverse() * state.AngularVelocity;
-        //Vector3 localAngVel = localTransform.Basis.Inverse() * state.AngularVelocity; // Maybe?
+        //Vector3 localAngVel = initialTransform.Basis.Inverse() * state.AngularVelocity; // tested and no go
 
         // 2. Integrate to update unwrapped angles
         _unwrappedAngles += localAngVel * state.Step;
 
         // 3. Convert limits to radians
-        Vector3 minRad = MinAngleDegrees * Mathf.DegToRad(1f);
-        Vector3 maxRad = MaxAngleDegrees * Mathf.DegToRad(1f);
+        Vector3 minRad = MinAngleDegrees * Mathf.DegToRad(1.0f);
+        Vector3 maxRad = MaxAngleDegrees * Mathf.DegToRad(1.0f);
 
         Vector3 correctionAxis = Vector3.Zero;
         //float correctionAngle = 0f;
@@ -76,7 +76,7 @@ public partial class RotationConstraint : PhysicsSystemComponent, IPhysicsCompon
                 // Accumulate correction for this axis
                 // We construct a correction vector where only the clamped axis has a value
                 Vector3 axisVector = Vector3.Zero;
-                axisVector[i] = 1f;
+                axisVector[i] = 1.0f;
 
                 // Create a basis rotation for this specific axis correction
                 Basis axisCorrection = new Basis(axisVector, correction);
@@ -84,9 +84,10 @@ public partial class RotationConstraint : PhysicsSystemComponent, IPhysicsCompon
                 // Apply to the state transform immediately (order matters: Local Axis Rotation)
                 // Rotating around LOCAL axis: newBasis = oldBasis * axisCorrection
                 state.Transform = new Transform3D(state.Transform.Basis * axisCorrection, state.Transform.Origin);
+                //state.Transform = new Transform3D(initialTransform.Basis * axisCorrection, initialTransform.Origin); // tested and no go
 
                 // Zero the specific local angular velocity component
-                localAngVel[i] = 0f;
+                localAngVel[i] = 0.0f;
             }
         }
 
@@ -94,6 +95,7 @@ public partial class RotationConstraint : PhysicsSystemComponent, IPhysicsCompon
         if (needsClamp)
         {
             state.AngularVelocity = state.Transform.Basis * localAngVel;
+            //state.AngularVelocity = initialTransform.Basis * localAngVel; // tested and no go
         }
     }
 }// EOF CLASS

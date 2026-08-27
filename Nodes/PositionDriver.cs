@@ -2,7 +2,7 @@ using System;
 using Godot;
 namespace MPhysicsSystem;
 
-
+[GlobalClass]
 public partial class PositionDriver : PhysicsSystemComponent, IPhysicsComponent
 {
     public enum MONITORING { ROTATIONLOCAL, POSITIONLOCAL }
@@ -14,19 +14,22 @@ public partial class PositionDriver : PhysicsSystemComponent, IPhysicsComponent
     [Export] float maxPosition = 0.0f;
     [Export] float minPosition = 0.0f;
 
+    private Transform3D initialTransform;
+
     public override void _Ready()
     {
         if (GetParent<RigidBody3D>() is IPhysicsSystem physicsSystem)
         {
+           	initialTransform = physicsSystem.GlobalTransform;
             body = GetParent<RigidBody3D>();
             physicsSystem.RegisterPhysicsComponent(this);
         }
     }
 
-    public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D initialTransform)
+    public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D otherTR)
     {
         Transform3D localTransform = initialTransform.Inverse() * state.Transform;
-        localTransform.Origin.Y = minPosition + maxPosition * MonitoredValue();
+        localTransform.Origin.Y = minPosition + (maxPosition - minPosition) * MonitoredValue();
         state.Transform = initialTransform * localTransform;
     }
 

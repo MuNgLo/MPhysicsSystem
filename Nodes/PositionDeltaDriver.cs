@@ -7,12 +7,13 @@ public partial class PositionDeltaDriver : PhysicsSystemComponent, IPhysicsCompo
     public enum MONITORING { ROTATIONLOCAL, POSITIONLOCAL }
     public enum MONITOREDAXIS { X, Y, Z }
 
-    [Export] RotationDeltaProvider deltaProvider;
+    [Export] PhysicsSystemComponent deltaProvider;
     [Export] MONITOREDAXIS monitoredAxis = MONITOREDAXIS.Y;
 
     [Export] float maxPosition = 0.0f;
     [Export] float minPosition = 0.0f;
     [Export] float sensitivity = 1.0f;
+
     private Transform3D initialTransform;
 
     public override void _Ready()
@@ -28,11 +29,8 @@ public partial class PositionDeltaDriver : PhysicsSystemComponent, IPhysicsCompo
     public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D otherTR)
     {
         Transform3D localTR = initialTransform.Inverse() * state.Transform;
-
         //GD.Print($"Current Y [{localTR.Origin.Y}] new [{Mathf.Clamp(localTR.Origin.Y + MonitoredValue(), minPosition, maxPosition)}] MonitoredValue[{MonitoredValue()}]");
-
         localTR.Origin.Y = Mathf.Clamp(localTR.Origin.Y + MonitoredValue(), minPosition, maxPosition);
-
         state.Transform = initialTransform * localTR;
     }
 
