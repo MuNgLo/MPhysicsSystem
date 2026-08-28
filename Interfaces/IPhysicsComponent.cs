@@ -18,5 +18,5 @@ public interface IPhysicsComponent
     /// Remember to do that in this method since other components will have changed state so it needs to recalculated<br/>
     /// to be useful in this component
     /// </summary>
-    void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D initialTransform);
+    void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D initialGlobalTransform);
 }// EOF INTERFACE

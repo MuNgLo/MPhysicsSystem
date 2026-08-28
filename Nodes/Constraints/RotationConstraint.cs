@@ -1,18 +1,22 @@
 using Godot;
 namespace MPhysicsSystem;
+
 [GlobalClass]
 public partial class RotationConstraint : PhysicsSystemComponent, IPhysicsComponent
 {
+    [Export] private protected bool lockX = true;
+    [Export] private protected bool lockY = true;
+    [Export] private protected bool lockZ = true;
+
+    [Export] public Vector3 MinAngleDegrees { get; set; } = new(0, 0, 0);
+    [Export] public Vector3 MaxAngleDegrees { get; set; } = new(0, 0, 0);
+    public Vector3 CurrentAngleDegrees => new(Mathf.RadToDeg(_unwrappedAngles.X), Mathf.RadToDeg(_unwrappedAngles.Y), Mathf.RadToDeg(_unwrappedAngles.Z));
+
     // Tracks accumulated rotation per local axis (radians)
     private Vector3 _unwrappedAngles;
 
     // The initial basis captured on entry
     private Basis _initialBasis;
-
-    [Export] public Vector3 MinAngleDegrees { get; set; } = new(0, 0, 0);
-    [Export] public Vector3 MaxAngleDegrees { get; set; } = new(0, 0, 0);
-	public Vector3 CurrentAngleDegrees => new(Mathf.RadToDeg(_unwrappedAngles.X),Mathf.RadToDeg(_unwrappedAngles.Y),Mathf.RadToDeg(_unwrappedAngles.Z));
-
 
     public Vector3 angelSpan = Vector3.Zero;
     /// <summary>
@@ -23,13 +27,13 @@ public partial class RotationConstraint : PhysicsSystemComponent, IPhysicsCompon
 
     public override void _Ready()
     {
-		if(GetParent<RigidBody3D>() is IPhysicsSystem physicsSystem)
-		{
-        	_initialBasis = physicsSystem.Transform.Basis;
-        	_unwrappedAngles = Vector3.Zero;
-			physicsSystem.RegisterPhysicsComponent(this);
+        if (GetParent<RigidBody3D>() is IPhysicsSystem physicsSystem)
+        {
+            _initialBasis = physicsSystem.Transform.Basis;
+            _unwrappedAngles = Vector3.Zero;
+            physicsSystem.RegisterPhysicsComponent(this);
             angelSpan = MaxAngleDegrees - MinAngleDegrees;
-		}
+        }
     }
 
     public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D initialTransform)
@@ -53,6 +57,10 @@ public partial class RotationConstraint : PhysicsSystemComponent, IPhysicsCompon
         // 4. Check limits per axis
         for (int i = 0; i < 3; i++)
         {
+            // Skip non constrained axis
+            if (i == 0 && !lockX) { continue; }
+            if (i == 1 && !lockY) { continue; }
+            if (i == 2 && !lockZ) { continue; }
             float val = _unwrappedAngles[i];
             float min = minRad[i];
             float max = maxRad[i];

@@ -1,0 +1,92 @@
+[gd_scene format=3 uid="uid://d37usqro6cqui"]
+
+[ext_resource type="Script" uid="uid://bf21c8v7vfkwv" path="res://addons/MPhysicsSystem/Nodes/PhysicsSystem3D.cs" id="1_6xxhv"]
+[ext_resource type="Script" uid="uid://b2ls8raibdc8y" path="res://addons/MPhysicsSystem/Nodes/PhysicsSystemRelay.cs" id="1_78d5n"]
+[ext_resource type="Script" uid="uid://m0q8bthgpqh6" path="res://addons/MPhysicsSystem/Nodes/Constraints/PositionConstraint.cs" id="2_78d5n"]
+[ext_resource type="Script" uid="uid://ratntmdo8502" path="res://addons/MPhysicsSystem/Nodes/Constraints/RotationConstraint.cs" id="4_fh521"]
+[ext_resource type="Script" uid="uid://dq47smc3cl121" path="res://addons/MPhysicsSystem/Nodes/Provider/RotationDeltaProvider.cs" id="5_78d5n"]
+[ext_resource type="Script" uid="uid://cnkb4mv0kayh0" path="res://addons/MPhysicsSystem/Nodes/Constant/RotationConstant.cs" id="5_fneyg"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_hlr0y"]
+height = 0.15625
+radius = 0.5498047
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_21gvt"]
+albedo_color = Color(0.22539282, 0.3040659, 0.32518005, 1)
+metallic_specular = 0.76
+
+[sub_resource type="BoxMesh" id="BoxMesh_w5jcy"]
+size = Vector3(1, 0.12, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_qpruj"]
+top_radius = 0.55
+bottom_radius = 0.55
+height = 0.3
+
+[node name="Gear" type="Node3D" unique_id=1751842074 node_paths=PackedStringArray("rotationDeltaProvider", "rotationConstraint")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+script = ExtResource("1_78d5n")
+rotationDeltaProvider = NodePath("PhysicsSystem3D/RotationDeltaProvider")
+rotationConstraint = NodePath("PhysicsSystem3D/RotationConstraint")
+metadata/_edit_group_ = true
+
+[node name="PhysicsSystem3D" type="RigidBody3D" parent="." unique_id=1629829056]
+script = ExtResource("1_6xxhv")
+debug = true
+metadata/_custom_type_script = "uid://bf21c8v7vfkwv"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=1337177824]
+shape = SubResource("CylinderShape3D_hlr0y")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsSystem3D" unique_id=1360844247]
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D-2" type="MeshInstance3D" parent="PhysicsSystem3D" unique_id=432118603]
+transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D-3" type="MeshInstance3D" parent="PhysicsSystem3D" unique_id=10627042]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D-4" type="MeshInstance3D" parent="PhysicsSystem3D" unique_id=1539996499]
+transform = Transform3D(0.7071067, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.7071067, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D-5" type="MeshInstance3D" parent="PhysicsSystem3D" unique_id=1137191740]
+transform = Transform3D(0.4999999, 0, 0.8660253, 0, 1, 0, -0.8660253, 0, 0.4999999, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D-6" type="MeshInstance3D" parent="PhysicsSystem3D" unique_id=1415092077]
+transform = Transform3D(0.25881898, 0, 0.9659257, 0, 1, 0, -0.9659257, 0, 0.25881898, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D-7" type="MeshInstance3D" parent="PhysicsSystem3D" unique_id=1579153968]
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("CylinderMesh_qpruj")
+
+[node name="PositionConstraint" type="Node" parent="PhysicsSystem3D" unique_id=1523009480]
+script = ExtResource("2_78d5n")
+lockX = true
+lockY = true
+lockZ = true
+
+[node name="RotationConstraint" type="Node" parent="PhysicsSystem3D" unique_id=91761860]
+script = ExtResource("4_fh521")
+lockY = false
+
+[node name="RotationConstant" type="Node" parent="PhysicsSystem3D" unique_id=1254196839]
+script = ExtResource("5_fneyg")
+velocityEnabled = true
+anglePerSecond = Vector3(0, 0.7853982, 0)
+Dampening = 0.243
+
+[node name="RotationDeltaProvider" type="Node" parent="PhysicsSystem3D" unique_id=1275010263]
+script = ExtResource("5_78d5n")
+metadata/_custom_type_script = "uid://dq47smc3cl121"

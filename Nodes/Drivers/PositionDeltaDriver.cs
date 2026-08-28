@@ -4,9 +4,6 @@ namespace MPhysicsSystem;
 [GlobalClass]
 public partial class PositionDeltaDriver : PhysicsSystemComponent, IPhysicsComponent
 {
-    public enum MONITORING { ROTATIONLOCAL, POSITIONLOCAL }
-    public enum MONITOREDAXIS { X, Y, Z }
-
     [Export] PhysicsSystemComponent deltaProvider;
     [Export] MONITOREDAXIS monitoredAxis = MONITOREDAXIS.Y;
 

@@ -1,10 +1,11 @@
 # MPhysicsSystem
 
-v0.1
+v0.2
 
 Component system for stacking constraints, drivers and things to control and manipulate RigidBody3D through the _IntegrateForce
 
 
+0.2 Things are working. Need some cleanup.
 0.1 First upload
 
 # Install
