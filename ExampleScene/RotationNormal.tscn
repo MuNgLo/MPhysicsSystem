@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://dm58ffhm6mfmv"]
+
+[ext_resource type="Script" uid="uid://b2ls8raibdc8y" path="res://addons/MPhysicsSystem/Nodes/PhysicsSystemRelay.cs" id="1_8x85i"]
+[ext_resource type="Script" uid="uid://bf21c8v7vfkwv" path="res://addons/MPhysicsSystem/Nodes/PhysicsSystem3D.cs" id="2_0fgsk"]
+[ext_resource type="Script" uid="uid://m0q8bthgpqh6" path="res://addons/MPhysicsSystem/Nodes/Constraints/PositionConstraint.cs" id="3_br47a"]
+[ext_resource type="Script" uid="uid://ratntmdo8502" path="res://addons/MPhysicsSystem/Nodes/Constraints/RotationConstraint.cs" id="4_tudy5"]
+[ext_resource type="Script" uid="uid://018ovwj4ww5v" path="res://addons/MPhysicsSystem/Nodes/Drivers/RotationDriver.cs" id="5_8x85i"]
+
+[sub_resource type="Gradient" id="Gradient_rtdwa"]
+colors = PackedColorArray(0.44291076, 0.44291076, 0.44291073, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_geu3i"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_omb2s"]
+noise = SubResource("FastNoiseLite_geu3i")
+color_ramp = SubResource("Gradient_rtdwa")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r5l22"]
+albedo_color = Color(0.9339126, 1.00111965e-05, 0.58829, 1)
+metallic_specular = 0.7
+roughness = 0.3
+normal_enabled = true
+normal_scale = 2.38
+normal_texture = SubResource("NoiseTexture2D_omb2s")
+
+[sub_resource type="SphereMesh" id="SphereMesh_0tg4e"]
+radial_segments = 12
+rings = 12
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_dot00"]
+
+[node name="RotationNormal" type="Node3D" unique_id=1557350002]
+script = ExtResource("1_8x85i")
+rotDeltaEnabled = true
+rotNormalEnabled = true
+flipped = true
+
+[node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=423070922]
+script = ExtResource("2_0fgsk")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D" unique_id=596517916]
+material_override = SubResource("StandardMaterial3D_r5l22")
+mesh = SubResource("SphereMesh_0tg4e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D" unique_id=481813402]
+shape = SubResource("SphereShape3D_dot00")
+
+[node name="PositionConstraint" type="Node" parent="RigidBody3D" unique_id=1857925616]
+script = ExtResource("3_br47a")
+metadata/_custom_type_script = "uid://m0q8bthgpqh6"
+
+[node name="RotationConstraint" type="Node" parent="RigidBody3D" unique_id=1068488831]
+script = ExtResource("4_tudy5")
+MinAngleDegrees = Vector3(0, -180, 0)
+MaxAngleDegrees = Vector3(0, 180, 0)
+metadata/_custom_type_script = "uid://ratntmdo8502"
+
+[node name="RotationDriver" type="Node" parent="RigidBody3D" unique_id=1325847039 node_paths=PackedStringArray("monitoredComponent")]
+script = ExtResource("5_8x85i")
+monitoredComponent = NodePath("../..")
+metadata/_custom_type_script = "uid://018ovwj4ww5v"

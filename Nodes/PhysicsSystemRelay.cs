@@ -17,9 +17,32 @@ public partial class PhysicsSystemRelay : PhysicsSystemComponent
 
     [Export(PropertyHint.GroupEnable), ExportGroup("Rotation Normal")] private bool rotNormalEnabled = false;
     [Export] PhysicsSystemComponent rotationConstraint;
+    [Export] bool flipped = false;
+
+
+    float driverValueY;
+
+    delegate float ValueResolver();
+
+    ValueResolver ResolveDriverValueY;
+
     public override float DriverValueY
     {
-        get => rotationConstraint.DriverValueY;
+        get => ResolveDriverValueY();
     }
+    public void SetDriverValueY(float newvalue) { driverValueY = newvalue; }
 
+
+    public override void _Ready()
+    {
+        if(rotationConstraint is not null){
+            ResolveDriverValueY = () => { return rotationConstraint.DriverValueY; };
+            return;
+        }
+        if(flipped){
+            ResolveDriverValueY = () => { return 1.0f - driverValueY; };
+            return;
+        }
+        ResolveDriverValueY = () => { return driverValueY; };
+    }
 }// EOF CLASS

@@ -4,9 +4,11 @@ namespace MPhysicsSystem;
 [GlobalClass]
 public partial class RotationConstant : PhysicsSystemComponent, IPhysicsComponent
 {
+    [Export] PhysicsSystemRelay sourceRelay;
     [Export(PropertyHint.GroupEnable), ExportGroup("Velocity")] private bool velocityEnabled = false;
     [Export(PropertyHint.Range, "-360, 360, 0.01, radians_as_degrees, suffix:°/s")]
     public Vector3 anglePerSecond { get; set; } = new(0, 0, 0);
+    [Export] public bool useRelaySpeedAsMultiplier = false;
     [Export(PropertyHint.Range, "0,1")]
     public float Dampening
     {
@@ -34,7 +36,7 @@ public partial class RotationConstant : PhysicsSystemComponent, IPhysicsComponen
         if (velocityEnabled)
         {
             localAngVel *= dampening;
-            localAngVel = localAngVel.Lerp(anglePerSecond, compliance);
+            localAngVel = localAngVel.Lerp(useRelaySpeedAsMultiplier ? anglePerSecond * sourceRelay.Speed : anglePerSecond, compliance);
         }
         state.AngularVelocity = state.Transform.Basis * localAngVel;
     }

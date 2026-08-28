@@ -4,9 +4,9 @@ namespace MPhysicsSystem;
 [GlobalClass]
 public partial class PositionConstraint : PhysicsSystemComponent, IPhysicsComponent
 {
-	[Export] private protected bool lockX = false;
-	[Export] private protected bool lockY = false;
-	[Export] private protected bool lockZ = false;
+	[Export] private protected bool lockX = true;
+	[Export] private protected bool lockY = true;
+	[Export] private protected bool lockZ = true;
 	[Export] private protected Vector3 minPosition = Vector3.Zero;
 	[Export] private protected Vector3 maxPosition = Vector3.Zero;
 
