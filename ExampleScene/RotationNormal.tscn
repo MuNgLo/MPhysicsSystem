@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://m0q8bthgpqh6" path="res://addons/MPhysicsSystem/Nodes/Constraints/PositionConstraint.cs" id="3_br47a"]
 [ext_resource type="Script" uid="uid://ratntmdo8502" path="res://addons/MPhysicsSystem/Nodes/Constraints/RotationConstraint.cs" id="4_tudy5"]
 [ext_resource type="Script" uid="uid://018ovwj4ww5v" path="res://addons/MPhysicsSystem/Nodes/Drivers/RotationDriver.cs" id="5_8x85i"]
+[ext_resource type="Script" uid="uid://blpvllmekwry1" path="res://addons/MPhysicsSystem/Nodes/Drivers/PositionDriver.cs" id="6_0fgsk"]
 
 [sub_resource type="Gradient" id="Gradient_rtdwa"]
 colors = PackedColorArray(0.44291076, 0.44291076, 0.44291073, 1, 1, 1, 1, 1)
@@ -36,6 +37,7 @@ rotNormalEnabled = true
 flipped = true
 
 [node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=423070922]
+constant_torque = Vector3(12.355, 0, 0)
 script = ExtResource("2_0fgsk")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D" unique_id=596517916]
@@ -47,10 +49,12 @@ shape = SubResource("SphereShape3D_dot00")
 
 [node name="PositionConstraint" type="Node" parent="RigidBody3D" unique_id=1857925616]
 script = ExtResource("3_br47a")
+lockY = false
 metadata/_custom_type_script = "uid://m0q8bthgpqh6"
 
 [node name="RotationConstraint" type="Node" parent="RigidBody3D" unique_id=1068488831]
 script = ExtResource("4_tudy5")
+lockX = false
 MinAngleDegrees = Vector3(0, -180, 0)
 MaxAngleDegrees = Vector3(0, 180, 0)
 metadata/_custom_type_script = "uid://ratntmdo8502"
@@ -59,3 +63,10 @@ metadata/_custom_type_script = "uid://ratntmdo8502"
 script = ExtResource("5_8x85i")
 monitoredComponent = NodePath("../..")
 metadata/_custom_type_script = "uid://018ovwj4ww5v"
+
+[node name="PositionDriver" type="Node" parent="RigidBody3D" unique_id=1629952000 node_paths=PackedStringArray("monitoredComponent")]
+script = ExtResource("6_0fgsk")
+monitoredComponent = NodePath("../..")
+maxPosition = 0.5
+minPosition = -0.5
+metadata/_custom_type_script = "uid://blpvllmekwry1"

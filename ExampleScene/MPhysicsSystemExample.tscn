@@ -2,14 +2,16 @@
 
 [ext_resource type="PackedScene" uid="uid://d37usqro6cqui" path="res://addons/MPhysicsSystem/ExampleScene/GearConstantRotationExample.tscn" id="1_e61dq"]
 [ext_resource type="Script" uid="uid://sxfj12heyofs" path="res://addons/MPhysicsSystem/ExampleScene/UISetRelaySpeed.cs" id="3_jbdyr"]
-[ext_resource type="PackedScene" uid="uid://dm58ffhm6mfmv" path="res://addons/MPhysicsSystem/ExampleScene/RotationNormal.tscn" id="4_yt5t5"]
 [ext_resource type="Script" uid="uid://dpnla14ghpbrg" path="res://addons/MPhysicsSystem/ExampleScene/UISetRelayNormal.cs" id="5_s681y"]
 [ext_resource type="PackedScene" uid="uid://bu7r8h2hh5naf" path="res://addons/MPhysicsSystem/ExampleScene/GearDrivenRotationExample.tscn" id="5_xsl2o"]
 [ext_resource type="Script" uid="uid://bf21c8v7vfkwv" path="res://addons/MPhysicsSystem/Nodes/PhysicsSystem3D.cs" id="6_fwdvu"]
 [ext_resource type="Script" uid="uid://b2ls8raibdc8y" path="res://addons/MPhysicsSystem/Nodes/PhysicsSystemRelay.cs" id="6_w5dan"]
 [ext_resource type="Script" uid="uid://m0q8bthgpqh6" path="res://addons/MPhysicsSystem/Nodes/Constraints/PositionConstraint.cs" id="7_dgr6r"]
+[ext_resource type="Script" uid="uid://dwg6okcjwoey5" path="res://addons/MPhysicsSystem/Nodes/Drivers/RotationDeltaDriver.cs" id="7_vp8ou"]
+[ext_resource type="Script" uid="uid://018ovwj4ww5v" path="res://addons/MPhysicsSystem/Nodes/Drivers/RotationDriver.cs" id="8_vp8ou"]
 [ext_resource type="Script" uid="uid://ratntmdo8502" path="res://addons/MPhysicsSystem/Nodes/Constraints/RotationConstraint.cs" id="8_w5dan"]
 [ext_resource type="Script" uid="uid://b8t2jyndbfn7p" path="res://addons/MPhysicsSystem/Nodes/Drivers/PositionPingPongDriver.cs" id="9_vp8ou"]
+[ext_resource type="Script" uid="uid://blpvllmekwry1" path="res://addons/MPhysicsSystem/Nodes/Drivers/PositionDriver.cs" id="10_888rd"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_862k8"]
 size = Vector3(30, 1, 30)
@@ -17,9 +19,47 @@ size = Vector3(30, 1, 30)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pp7ur"]
 albedo_color = Color(0.2230739, 0.42045537, 0.23213077, 1)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_w5dan"]
+size = Vector3(30, 1, 30)
+
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_e61dq"]
 height = 0.15625
 radius = 0.31103516
+
+[sub_resource type="Gradient" id="Gradient_rtdwa"]
+colors = PackedColorArray(0.44291076, 0.44291076, 0.44291073, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_geu3i"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_omb2s"]
+noise = SubResource("FastNoiseLite_geu3i")
+color_ramp = SubResource("Gradient_rtdwa")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r5l22"]
+albedo_color = Color(0.9339126, 1.00111965e-05, 0.58829, 1)
+metallic_specular = 0.7
+roughness = 0.3
+normal_enabled = true
+normal_scale = 2.38
+normal_texture = SubResource("NoiseTexture2D_omb2s")
+
+[sub_resource type="SphereMesh" id="SphereMesh_0tg4e"]
+radial_segments = 12
+rings = 12
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g48q6"]
+albedo_color = Color(0.50980395, 0.8039216, 0.050980393, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_w5dan"]
+size = Vector3(0.05, 1, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vp8ou"]
+albedo_color = Color(0.91764706, 0.23529412, 0.31764707, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w5dan"]
+albedo_color = Color(0.16078432, 0.54901963, 0.9607843, 1)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_dot00"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xqukd"]
 albedo_color = Color(0.11668619, 0.36778966, 0.77659637, 1)
@@ -52,6 +92,11 @@ spot_range = 13.721105
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = SubResource("BoxMesh_862k8")
 surface_material_override/0 = SubResource("StandardMaterial3D_pp7ur")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Statics/MeshInstance3D" unique_id=1083913201]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Statics/MeshInstance3D/StaticBody3D" unique_id=1482109082]
+shape = SubResource("BoxShape3D_w5dan")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=251686577]
 transform = Transform3D(1, 0, 0, 0, 0.964847, 0.26281232, 0, -0.26281232, 0.964847, 0, 3.4707472, 4.166563)
@@ -123,8 +168,13 @@ transform = Transform3D(1, -1.0430813e-07, 7.450581e-09, 7.450581e-09, -2.980232
 billboard = 2
 text = "<-RotationDeltaDriver"
 
-[node name="RotationNormal" parent="." unique_id=1557350002 instance=ExtResource("4_yt5t5")]
+[node name="RotationNormal" type="Node3D" parent="." unique_id=1557350002 node_paths=PackedStringArray("rotationDeltaProvider")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3933966, 2.965154, 0)
+script = ExtResource("6_w5dan")
+rotDeltaEnabled = true
+rotationDeltaProvider = NodePath("../GearConstant")
+rotNormalEnabled = true
+flipped = true
 
 [node name="Label3D" type="Label3D" parent="RotationNormal" unique_id=2016021442]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.48064113, -0.37224245, 0.7760546)
@@ -132,15 +182,64 @@ billboard = 2
 text = "^
 RotationNormal"
 
-[node name="Position" type="Node3D" parent="." unique_id=1650346280 node_paths=PackedStringArray("rotationDeltaProvider", "rotationConstraint")]
+[node name="RigidBody3D" type="RigidBody3D" parent="RotationNormal" unique_id=423070922]
+gravity_scale = 0.0
+script = ExtResource("6_fwdvu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RotationNormal/RigidBody3D" unique_id=596517916]
+material_override = SubResource("StandardMaterial3D_r5l22")
+mesh = SubResource("SphereMesh_0tg4e")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RotationNormal/RigidBody3D/MeshInstance3D" unique_id=1923491030]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+material_override = SubResource("StandardMaterial3D_g48q6")
+mesh = SubResource("BoxMesh_w5dan")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="RotationNormal/RigidBody3D/MeshInstance3D" unique_id=792359957]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0.5, 0, 0)
+material_override = SubResource("StandardMaterial3D_vp8ou")
+mesh = SubResource("BoxMesh_w5dan")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="RotationNormal/RigidBody3D/MeshInstance3D" unique_id=1591336468]
+transform = Transform3D(1.9106855e-15, -4.371139e-08, -1, -1, -4.371139e-08, 0, -4.371139e-08, 1, -4.371139e-08, 0, 0, 0.5)
+material_override = SubResource("StandardMaterial3D_w5dan")
+mesh = SubResource("BoxMesh_w5dan")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RotationNormal/RigidBody3D" unique_id=481813402]
+shape = SubResource("SphereShape3D_dot00")
+
+[node name="PositionConstraint" type="Node" parent="RotationNormal/RigidBody3D" unique_id=2107254454]
+script = ExtResource("7_dgr6r")
+metadata/_custom_type_script = "uid://m0q8bthgpqh6"
+
+[node name="RotationDeltaDriver" type="Node" parent="RotationNormal/RigidBody3D" unique_id=1012248677 node_paths=PackedStringArray("monitoredComponent")]
+script = ExtResource("7_vp8ou")
+monitoredComponent = NodePath("../..")
+drivenAxis = 0
+metadata/_custom_type_script = "uid://dwg6okcjwoey5"
+
+[node name="RotationDriver" type="Node" parent="RotationNormal/RigidBody3D" unique_id=314147905 node_paths=PackedStringArray("monitoredComponent")]
+script = ExtResource("8_vp8ou")
+monitoredComponent = NodePath("../..")
+MaxAngle = 0.7853981633974483
+MinAngle = -0.7853981633974483
+metadata/_custom_type_script = "uid://018ovwj4ww5v"
+
+[node name="RotationConstraint" type="Node" parent="RotationNormal/RigidBody3D" unique_id=332324877]
+script = ExtResource("8_w5dan")
+lockX = false
+lockY = false
+metadata/_custom_type_script = "uid://ratntmdo8502"
+
+[node name="Position" type="Node3D" parent="." unique_id=1650346280 node_paths=PackedStringArray("rotationDeltaProvider")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5304401, 1.2679863)
 script = ExtResource("6_w5dan")
 rotDeltaEnabled = true
 rotationDeltaProvider = NodePath("../GearConstant")
 rotNormalEnabled = true
-rotationConstraint = NodePath("../GearConstant")
 
 [node name="PhysicsSystem3D" type="RigidBody3D" parent="Position" unique_id=169731706]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.28, 0)
 script = ExtResource("6_fwdvu")
 metadata/_custom_type_script = "uid://bf21c8v7vfkwv"
 
@@ -152,9 +251,15 @@ skeleton = NodePath("../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Position/PhysicsSystem3D" unique_id=1919988461]
 shape = SubResource("BoxShape3D_dgr6r")
 
+[node name="Label3D" type="Label3D" parent="Position/PhysicsSystem3D" unique_id=854686071]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0470638, 0, 0)
+billboard = 2
+text = "<-PositionDriver"
+
 [node name="PositionConstraint" type="Node" parent="Position/PhysicsSystem3D" unique_id=973700431]
 script = ExtResource("7_dgr6r")
 lockX = false
+lockY = false
 metadata/_custom_type_script = "uid://m0q8bthgpqh6"
 
 [node name="RotationConstraint" type="Node" parent="Position/PhysicsSystem3D" unique_id=198105261]
@@ -170,10 +275,12 @@ minPosition = -3.0
 useRelaySpeedAsMultiplier = true
 metadata/_custom_type_script = "uid://b8t2jyndbfn7p"
 
-[node name="Label3D" type="Label3D" parent="Position/PhysicsSystem3D" unique_id=854686071]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0470638, 0, 0)
-billboard = 2
-text = "<-PositionDriver"
+[node name="PositionDriver" type="Node" parent="Position/PhysicsSystem3D" unique_id=1406551267 node_paths=PackedStringArray("monitoredComponent")]
+script = ExtResource("10_888rd")
+monitoredComponent = NodePath("../..")
+maxPosition = 2.0
+minPosition = -0.1
+metadata/_custom_type_script = "uid://blpvllmekwry1"
 
 [node name="Control" type="Control" parent="." unique_id=1663345469]
 layout_mode = 3
@@ -224,7 +331,7 @@ layout_mode = 2
 text = "Speed:"
 horizontal_alignment = 2
 
-[node name="HSlider" type="HSlider" parent="Control/MarginContainer/PanelContainer/GridContainer/GridContainer/ConstantSpeed" unique_id=2127926040 node_paths=PackedStringArray("relay")]
+[node name="HSlider" type="HSlider" parent="Control/MarginContainer/PanelContainer/GridContainer/GridContainer/ConstantSpeed" unique_id=2127926040 node_paths=PackedStringArray("relay", "relay2")]
 layout_mode = 2
 size_flags_horizontal = 3
 min_value = -4.0
@@ -232,6 +339,7 @@ max_value = 4.0
 step = 0.01
 script = ExtResource("3_jbdyr")
 relay = NodePath("../../../../../../../GearConstant")
+relay2 = NodePath("../../../../../../../RotationNormal")
 
 [node name="RotationNormal" type="HBoxContainer" parent="Control/MarginContainer/PanelContainer/GridContainer/GridContainer" unique_id=1885903721]
 layout_mode = 2

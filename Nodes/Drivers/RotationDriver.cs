@@ -5,52 +5,64 @@ namespace MPhysicsSystem;
 [GlobalClass]
 public partial class RotationDriver : PhysicsSystemComponent, IPhysicsComponent
 {
-    [Export] PhysicsSystemComponent monitoredComponent;
-    [Export] MONITOREDAXIS monitoredAxis = MONITOREDAXIS.Y;
+	[Export] PhysicsSystemComponent monitoredComponent;
+	[Export] MONITOREDAXIS monitoredAxis = MONITOREDAXIS.Y;
 
-    [Export] float MaxAngleDegree = -180.0f;
-    [Export] float MinAngleDegree = 180.0f;
+	[Export(PropertyHint.Range, "-50000, 50000, 0.01, radians_as_degrees, suffix:°/s")] float MaxAngle = 0.0f;
+	[Export(PropertyHint.Range, "-50000, 50000, 0.01, radians_as_degrees, suffix:°/s")] float MinAngle = 0.0f;
 
-    private Transform3D initialTransform;
 
-    public override void _Ready()
-    {
-        if (GetParent<RigidBody3D>() is IPhysicsSystem physicsSystem)
-        {
-           	initialTransform = physicsSystem.GlobalTransform;
-            body = GetParent<RigidBody3D>();
-            physicsSystem.RegisterPhysicsComponent(this);
-        }
-    }
+	public override void _Ready()
+	{
+		if (GetParent<RigidBody3D>() is IPhysicsSystem physicsSystem)
+		{
+            cumulativeLocalAngles = Vector3.Zero;
+			body = GetParent<RigidBody3D>();
+			physicsSystem.RegisterPhysicsComponent(this);
+		}
+	}
 
-    public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D otherTR)
-    {
-        Transform3D localTransform = initialTransform.Inverse() * state.Transform;
-        float rad = Mathf.DegToRad(MinAngleDegree) + (Mathf.DegToRad(MaxAngleDegree) - Mathf.DegToRad(MinAngleDegree)) * MonitoredValue();
-        state.Transform = initialTransform * new Transform3D(new Basis(Vector3.Up, rad), localTransform.Origin);
-    }
 
-    float AxisPosition()
-    {
-        switch (monitoredAxis)
-        {
-            case MONITOREDAXIS.X:
-                return body.Position.Y;
-            case MONITOREDAXIS.Z:
-                return body.Position.Z;
-        }
-        return body.Position.Y;
-    }
+ // Tracks accumulated rotation per local axis (radians)
+    private Vector3 cumulativeLocalAngles;
+	float angularVelTweak = 0.0f;
+	public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D initialGlobalTransform)
+	{
+		Vector3 localAngularVelocity = state.Transform.Basis.Inverse() * state.AngularVelocity;
+        cumulativeLocalAngles += localAngularVelocity * state.Step;
+		// calculate where we should be
+		float rad = MinAngle + (MaxAngle - MinAngle) * MonitoredValue();
+		// calculate how much we need to change
+		rad = rad - cumulativeLocalAngles.Y ;
+		angularVelTweak = rad / state.Step;
+		localAngularVelocity.Y = angularVelTweak;
+		state.AngularVelocity = state.Transform.Basis * localAngularVelocity;
+    
+		// This line breaks in 4.7 since it will dirty the transform resulting in velocities and forces being dropped
+		//state.Transform = new Transform3D(initialGlobalTransform.Basis * new Basis(Vector3.Up, cumulativeLocalAngles.Y + rad), initialGlobalTransform.Origin);
+	}
 
-    float MonitoredValue()
-    {
-        switch (monitoredAxis)
-        {
-            case MONITOREDAXIS.X:
-                return monitoredComponent.DriverValueX;
-            case MONITOREDAXIS.Z:
-                return monitoredComponent.DriverValueZ;
-        }
-        return monitoredComponent.DriverValueY;
-    }
+	float AxisPosition()
+	{
+		switch (monitoredAxis)
+		{
+			case MONITOREDAXIS.X:
+				return body.Position.Y;
+			case MONITOREDAXIS.Z:
+				return body.Position.Z;
+		}
+		return body.Position.Y;
+	}
+
+	float MonitoredValue()
+	{
+		switch (monitoredAxis)
+		{
+			case MONITOREDAXIS.X:
+				return monitoredComponent.DriverValueX;
+			case MONITOREDAXIS.Z:
+				return monitoredComponent.DriverValueZ;
+		}
+		return monitoredComponent.DriverValueY;
+	}
 }// EOF CLASS

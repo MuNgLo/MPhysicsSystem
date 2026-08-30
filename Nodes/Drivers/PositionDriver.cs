@@ -11,23 +11,21 @@ public partial class PositionDriver : PhysicsSystemComponent, IPhysicsComponent
     [Export] float maxPosition = 0.0f;
     [Export] float minPosition = 0.0f;
 
-    private Transform3D initialTransform;
 
     public override void _Ready()
     {
         if (GetParent<RigidBody3D>() is IPhysicsSystem physicsSystem)
         {
-           	initialTransform = physicsSystem.GlobalTransform;
             body = GetParent<RigidBody3D>();
             physicsSystem.RegisterPhysicsComponent(this);
         }
     }
 
-    public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D otherTR)
+    public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D initialGlobalTransform)
     {
-        Transform3D localTransform = initialTransform.Inverse() * state.Transform;
+        Transform3D localTransform = initialGlobalTransform.Inverse() * state.Transform;
         localTransform.Origin.Y = minPosition + (maxPosition - minPosition) * MonitoredValue();
-        state.Transform = initialTransform * localTransform;
+        state.Transform = initialGlobalTransform * localTransform;
     }
 
     float AxisPosition()

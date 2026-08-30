@@ -4,8 +4,8 @@
 [ext_resource type="Script" uid="uid://b2ls8raibdc8y" path="res://addons/MPhysicsSystem/Nodes/PhysicsSystemRelay.cs" id="1_78d5n"]
 [ext_resource type="Script" uid="uid://m0q8bthgpqh6" path="res://addons/MPhysicsSystem/Nodes/Constraints/PositionConstraint.cs" id="2_78d5n"]
 [ext_resource type="Script" uid="uid://ratntmdo8502" path="res://addons/MPhysicsSystem/Nodes/Constraints/RotationConstraint.cs" id="4_fh521"]
+[ext_resource type="Script" uid="uid://d2q86h7p6ph0d" path="res://addons/MPhysicsSystem/Nodes/Constant/RotationVelocityConstant.cs" id="5_2uw3q"]
 [ext_resource type="Script" uid="uid://dq47smc3cl121" path="res://addons/MPhysicsSystem/Nodes/Provider/RotationDeltaProvider.cs" id="5_78d5n"]
-[ext_resource type="Script" uid="uid://cnkb4mv0kayh0" path="res://addons/MPhysicsSystem/Nodes/Constant/RotationConstant.cs" id="5_fneyg"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_hlr0y"]
 height = 0.15625
@@ -80,13 +80,13 @@ script = ExtResource("2_78d5n")
 script = ExtResource("4_fh521")
 lockY = false
 
-[node name="RotationConstant" type="Node" parent="PhysicsSystem3D" unique_id=1254196839 node_paths=PackedStringArray("sourceRelay")]
-script = ExtResource("5_fneyg")
+[node name="RotationVelocityConstant" type="Node" parent="PhysicsSystem3D" unique_id=542849064 node_paths=PackedStringArray("sourceRelay")]
+script = ExtResource("5_2uw3q")
 sourceRelay = NodePath("../..")
-velocityEnabled = true
-anglePerSecond = Vector3(0, 0.7853982, 0)
 useRelaySpeedAsMultiplier = true
-Dampening = 0.243
+axisY = true
+VelocityY = 0.8726646259971648
+metadata/_custom_type_script = "uid://d2q86h7p6ph0d"
 
 [node name="RotationDeltaProvider" type="Node" parent="PhysicsSystem3D" unique_id=1275010263]
 script = ExtResource("5_78d5n")

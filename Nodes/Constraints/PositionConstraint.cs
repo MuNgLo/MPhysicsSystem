@@ -21,13 +21,20 @@ public partial class PositionConstraint : PhysicsSystemComponent, IPhysicsCompon
 		}
 	}
 
-	public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D initialTransform)
+	public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D initialGlobalTransform)
 	{
-		Transform3D tr = initialTransform.Inverse() * state.Transform;
+		Transform3D tr = initialGlobalTransform.Inverse() * state.Transform;
+
+		Vector3 localAngVel = initialGlobalTransform.Basis.Inverse() * state.AngularVelocity;
+
 
 		if (lockX)
 		{
-			if (tr.Origin.X < minPosition.X) { tr.Origin.X = minPosition.X; state.LinearVelocity -= state.LinearVelocity.Project(-tr.Basis.X); }
+			if (tr.Origin.X < minPosition.X)
+			{
+				tr.Origin.X = minPosition.X;
+				state.LinearVelocity -= state.LinearVelocity.Project(-tr.Basis.X);
+			}
 			else if (tr.Origin.X > maxPosition.X) { tr.Origin.X = maxPosition.X; state.LinearVelocity -= state.LinearVelocity.Project(tr.Basis.X); }
 		}
 		if (lockY)
@@ -40,7 +47,7 @@ public partial class PositionConstraint : PhysicsSystemComponent, IPhysicsCompon
 			if (tr.Origin.Z < minPosition.Z) { tr.Origin.Z = minPosition.Z; state.LinearVelocity -= state.LinearVelocity.Project(-tr.Basis.Z); }
 			else if (tr.Origin.Z > maxPosition.Z) { tr.Origin.Z = maxPosition.Z; state.LinearVelocity -= state.LinearVelocity.Project(tr.Basis.Z); }
 		}
-        state.LinearVelocity = Vector3.Zero;
-        state.Transform = initialTransform * tr;
+		state.LinearVelocity = Vector3.Zero;
+		state.Transform = initialGlobalTransform * tr;
 	}
 }// EOF CLASS
