@@ -1,6 +1,8 @@
 using Godot;
 namespace MPhysicsSystem;
-
+/// <summary>
+/// 0.5 cleared. Doesn't itself actually manipulate the physics body
+/// </summary>
 [GlobalClass]
 public partial class RotationDeltaProvider : PhysicsSystemComponent, IPhysicsComponent
 {
@@ -18,6 +20,5 @@ public partial class RotationDeltaProvider : PhysicsSystemComponent, IPhysicsCom
     {
         Vector3 localAngVel = state.Transform.Basis.Inverse() * state.AngularVelocity;
         RotationDelta = localAngVel * state.Step;
-        //GD.Print($"Rotation detla Y [{RotationDelta.Y}]");
     }
 }// EOF CLASS

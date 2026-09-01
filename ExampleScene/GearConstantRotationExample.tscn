@@ -34,11 +34,11 @@ metadata/_edit_group_ = true
 
 [node name="PhysicsSystem3D" type="RigidBody3D" parent="." unique_id=1629829056]
 script = ExtResource("1_6xxhv")
-debug = true
 metadata/_custom_type_script = "uid://bf21c8v7vfkwv"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=1337177824]
 shape = SubResource("CylinderShape3D_hlr0y")
+disabled = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsSystem3D" unique_id=1360844247]
 material_override = SubResource("StandardMaterial3D_21gvt")
@@ -73,13 +73,6 @@ mesh = SubResource("BoxMesh_w5jcy")
 material_override = SubResource("StandardMaterial3D_21gvt")
 mesh = SubResource("CylinderMesh_qpruj")
 
-[node name="PositionConstraint" type="Node" parent="PhysicsSystem3D" unique_id=1523009480]
-script = ExtResource("2_78d5n")
-
-[node name="RotationConstraint" type="Node" parent="PhysicsSystem3D" unique_id=91761860]
-script = ExtResource("4_fh521")
-lockY = false
-
 [node name="RotationVelocityConstant" type="Node" parent="PhysicsSystem3D" unique_id=542849064 node_paths=PackedStringArray("sourceRelay")]
 script = ExtResource("5_2uw3q")
 sourceRelay = NodePath("../..")
@@ -87,6 +80,13 @@ useRelaySpeedAsMultiplier = true
 axisY = true
 VelocityY = 0.8726646259971648
 metadata/_custom_type_script = "uid://d2q86h7p6ph0d"
+
+[node name="RotationConstraint" type="Node" parent="PhysicsSystem3D" unique_id=91761860]
+script = ExtResource("4_fh521")
+lockY = false
+
+[node name="PositionConstraint" type="Node" parent="PhysicsSystem3D" unique_id=1523009480]
+script = ExtResource("2_78d5n")
 
 [node name="RotationDeltaProvider" type="Node" parent="PhysicsSystem3D" unique_id=1275010263]
 script = ExtResource("5_78d5n")

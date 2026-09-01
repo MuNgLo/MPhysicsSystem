@@ -1,0 +1,177 @@
+[gd_scene format=3 uid="uid://do536a77xlq0y"]
+
+[ext_resource type="Script" uid="uid://b2ls8raibdc8y" path="res://addons/MPhysicsSystem/Nodes/PhysicsSystemRelay.cs" id="1_p1ycd"]
+[ext_resource type="Script" uid="uid://bf21c8v7vfkwv" path="res://addons/MPhysicsSystem/Nodes/PhysicsSystem3D.cs" id="2_rvde8"]
+[ext_resource type="Script" uid="uid://m0q8bthgpqh6" path="res://addons/MPhysicsSystem/Nodes/Constraints/PositionConstraint.cs" id="3_mpxpm"]
+[ext_resource type="Script" uid="uid://ratntmdo8502" path="res://addons/MPhysicsSystem/Nodes/Constraints/RotationConstraint.cs" id="4_iae0u"]
+[ext_resource type="Script" uid="uid://d2q86h7p6ph0d" path="res://addons/MPhysicsSystem/Nodes/Constant/RotationVelocityConstant.cs" id="5_da0m8"]
+[ext_resource type="Script" uid="uid://dq47smc3cl121" path="res://addons/MPhysicsSystem/Nodes/Provider/RotationDeltaProvider.cs" id="6_krgps"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_i4prd"]
+size = Vector3(0.16699219, 3.9804688, 0.11035156)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_hlr0y"]
+height = 0.15625
+radius = 0.5498047
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_21gvt"]
+albedo_color = Color(0.22539282, 0.3040659, 0.32518005, 1)
+metallic_specular = 0.76
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_qpruj"]
+top_radius = 0.55
+bottom_radius = 0.55
+height = 4.1220703
+
+[sub_resource type="BoxMesh" id="BoxMesh_w5jcy"]
+size = Vector3(0.16845703, 4.005, 0.12011719)
+
+[node name="GearLongConstant" type="Node3D" unique_id=1751842074 node_paths=PackedStringArray("rotationDeltaProvider", "rotationConstraint")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+script = ExtResource("1_p1ycd")
+rotDeltaEnabled = true
+rotationDeltaProvider = NodePath("PhysicsSystem3D/RotationDeltaProvider")
+rotNormalEnabled = true
+rotationConstraint = NodePath("PhysicsSystem3D/RotationConstraint")
+metadata/_edit_group_ = true
+
+[node name="PhysicsSystem3D" type="RigidBody3D" parent="." unique_id=1629829056]
+mass = 1000.0
+custom_integrator = true
+script = ExtResource("2_rvde8")
+debug = true
+metadata/_custom_type_script = "uid://bf21c8v7vfkwv"
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=701362196]
+transform = Transform3D(-5.9604645e-08, 0, -1, 0, 1, 0, 1, 0, -5.9604645e-08, 3.4336487e-08, 0, -0.57607067)
+shape = SubResource("BoxShape3D_i4prd")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=1563104031]
+transform = Transform3D(-0.50000006, 0, -0.8660253, -3.5527137e-15, 1, 0, 0.8660253, 0, -0.50000006, 0.28803536, 1.7763568e-15, -0.4988918)
+shape = SubResource("BoxShape3D_i4prd")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=698218054]
+transform = Transform3D(-0.86602545, 0, -0.49999994, 0, 1, 0, 0.49999994, 0, -0.86602545, 0.49889186, 0, -0.2880353)
+shape = SubResource("BoxShape3D_i4prd")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=816433849]
+transform = Transform3D(-1, 0, 1.1920929e-07, 0, 1, 0, -1.1920929e-07, 0, -1, 0.57607067, 0, 6.8672975e-08)
+shape = SubResource("BoxShape3D_i4prd")
+
+[node name="CollisionShape3D6" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=1185292471]
+transform = Transform3D(-0.86602527, 0, 0.5000001, -1.7763568e-15, 1, 3.5527137e-15, -0.5000001, 0, -0.86602527, 0.49889174, 0, 0.2880354)
+shape = SubResource("BoxShape3D_i4prd")
+
+[node name="CollisionShape3D7" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=166233163]
+transform = Transform3D(1.1920929e-07, 0, 1, 0, 1, 0, -1, 0, 1.1920929e-07, -6.8672975e-08, 0, 0.57607067)
+shape = SubResource("BoxShape3D_i4prd")
+
+[node name="CollisionShape3D8" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=1813717474]
+transform = Transform3D(0.5000002, 0, 0.86602527, 3.5527137e-15, 1, 0, -0.86602527, 0, 0.5000002, -0.28803542, -1.7763568e-15, 0.49889174)
+shape = SubResource("BoxShape3D_i4prd")
+
+[node name="CollisionShape3D9" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=1533419308]
+transform = Transform3D(0.86602545, 0, 0.49999982, 0, 1, 0, -0.49999982, 0, 0.86602545, -0.49889186, 0, 0.28803524)
+shape = SubResource("BoxShape3D_i4prd")
+
+[node name="CollisionShape3D10" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=135600167]
+transform = Transform3D(-0.4999999, 0, 0.86602545, 0, 1, 0, -0.86602545, 0, -0.4999999, 0.28803527, 1.7763568e-15, 0.49889186)
+shape = SubResource("BoxShape3D_i4prd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=1337177824]
+shape = SubResource("CylinderShape3D_hlr0y")
+
+[node name="CollisionShape3D11" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=1287545527]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.57607067, 0, 0)
+shape = SubResource("BoxShape3D_i4prd")
+
+[node name="CollisionShape3D12" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=41891328]
+transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, -0.49889183, 0, -0.28803533)
+shape = SubResource("BoxShape3D_i4prd")
+
+[node name="CollisionShape3D13" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=1351344927]
+transform = Transform3D(0.49999997, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, 0.49999997, -0.2880353, -1.7763568e-15, -0.49889186)
+shape = SubResource("BoxShape3D_i4prd")
+
+[node name="MeshInstance3D-7" type="MeshInstance3D" parent="PhysicsSystem3D" unique_id=1579153968]
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("CylinderMesh_qpruj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsSystem3D/MeshInstance3D-7" unique_id=633200630]
+transform = Transform3D(-5.9604645e-08, 0, -1, 0, 1, 0, 1, 0, -5.9604645e-08, 3.4336487e-08, 0, -0.57607067)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="PhysicsSystem3D/MeshInstance3D-7" unique_id=372241473]
+transform = Transform3D(-0.50000006, 0, -0.8660253, -3.5527137e-15, 1, 0, 0.8660253, 0, -0.50000006, 0.28803536, 1.7763568e-15, -0.4988918)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="PhysicsSystem3D/MeshInstance3D-7" unique_id=810702846]
+transform = Transform3D(-0.86602545, 0, -0.49999994, 0, 1, 0, 0.49999994, 0, -0.86602545, 0.49889186, 0, -0.2880353)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="PhysicsSystem3D/MeshInstance3D-7" unique_id=598460034]
+transform = Transform3D(-1, 0, 1.1920929e-07, 0, 1, 0, -1.1920929e-07, 0, -1, 0.57607067, 0, 6.8672975e-08)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="PhysicsSystem3D/MeshInstance3D-7" unique_id=135362047]
+transform = Transform3D(-0.86602527, 0, 0.5000001, -1.7763568e-15, 1, 3.5527137e-15, -0.5000001, 0, -0.86602527, 0.49889174, 0, 0.2880354)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="PhysicsSystem3D/MeshInstance3D-7" unique_id=1413476786]
+transform = Transform3D(-0.4999999, 0, 0.86602545, 0, 1, 0, -0.86602545, 0, -0.4999999, 0.28803527, 1.7763568e-15, 0.49889186)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="PhysicsSystem3D/MeshInstance3D-7" unique_id=651405145]
+transform = Transform3D(1.1920929e-07, 0, 1, 0, 1, 0, -1, 0, 1.1920929e-07, -6.8672975e-08, 0, 0.57607067)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="PhysicsSystem3D/MeshInstance3D-7" unique_id=438891215]
+transform = Transform3D(0.5000002, 0, 0.86602527, 3.5527137e-15, 1, 0, -0.86602527, 0, 0.5000002, -0.28803542, -1.7763568e-15, 0.49889174)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D9" type="MeshInstance3D" parent="PhysicsSystem3D/MeshInstance3D-7" unique_id=183275076]
+transform = Transform3D(0.86602545, 0, 0.49999982, 0, 1, 0, -0.49999982, 0, 0.86602545, -0.49889186, 0, 0.28803524)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D10" type="MeshInstance3D" parent="PhysicsSystem3D/MeshInstance3D-7" unique_id=1360844247]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.57607067, 0, 0)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D11" type="MeshInstance3D" parent="PhysicsSystem3D/MeshInstance3D-7" unique_id=1941127309]
+transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, -0.49889183, 0, -0.28803533)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="MeshInstance3D12" type="MeshInstance3D" parent="PhysicsSystem3D/MeshInstance3D-7" unique_id=148617133]
+transform = Transform3D(0.49999997, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, 0.49999997, -0.2880353, -1.7763568e-15, -0.49889186)
+material_override = SubResource("StandardMaterial3D_21gvt")
+mesh = SubResource("BoxMesh_w5jcy")
+
+[node name="PositionConstraint" type="Node" parent="PhysicsSystem3D" unique_id=1523009480]
+script = ExtResource("3_mpxpm")
+
+[node name="RotationConstraint" type="Node" parent="PhysicsSystem3D" unique_id=91761860]
+script = ExtResource("4_iae0u")
+lockY = false
+
+[node name="RotationVelocityConstant" type="Node" parent="PhysicsSystem3D" unique_id=542849064 node_paths=PackedStringArray("sourceRelay")]
+script = ExtResource("5_da0m8")
+sourceRelay = NodePath("../..")
+useRelaySpeedAsMultiplier = true
+axisY = true
+VelocityY = 0.8726646259971648
+metadata/_custom_type_script = "uid://d2q86h7p6ph0d"
+
+[node name="RotationDeltaProvider" type="Node" parent="PhysicsSystem3D" unique_id=1275010263]
+script = ExtResource("6_krgps")
+metadata/_custom_type_script = "uid://dq47smc3cl121"

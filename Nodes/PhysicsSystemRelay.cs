@@ -26,17 +26,17 @@ public partial class PhysicsSystemRelay : PhysicsSystemComponent
 
     ValueResolver ResolveDriverValueY;
 
-    public override float DriverValueY
+    public override float DriverNormalizedValueY
     {
         get => ResolveDriverValueY();
     }
-    public void SetDriverValueY(float newvalue) { driverValueY = newvalue; }
+    public void SetDriverValueY(float newValue) { driverValueY = newValue; }
 
 
     public override void _Ready()
     {
         if(rotationConstraint is not null){
-            ResolveDriverValueY = () => { return rotationConstraint.DriverValueY; };
+            ResolveDriverValueY = () => { return rotationConstraint.DriverNormalizedValueY; };
             return;
         }
         if(flipped){

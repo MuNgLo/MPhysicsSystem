@@ -30,7 +30,6 @@ metadata/_edit_group_ = true
 
 [node name="PhysicsSystem3D" type="RigidBody3D" parent="." unique_id=1629829056]
 script = ExtResource("2_rddvw")
-debug = true
 metadata/_custom_type_script = "uid://bf21c8v7vfkwv"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsSystem3D" unique_id=1337177824]
@@ -72,11 +71,14 @@ mesh = SubResource("CylinderMesh_qpruj")
 [node name="PositionConstraint" type="Node" parent="PhysicsSystem3D" unique_id=1523009480]
 script = ExtResource("3_ab1ft")
 
-[node name="RotationConstraint" type="Node" parent="PhysicsSystem3D" unique_id=91761860]
+[node name="RotationConstraint" type="Node" parent="PhysicsSystem3D" unique_id=91761860 node_paths=PackedStringArray("monitoredComponent", "deltaProvider")]
 script = ExtResource("4_pg50i")
 lockY = false
+monitoredComponent = NodePath("../..")
+deltaProvider = NodePath("../..")
 
-[node name="RotationDeltaDriver" type="Node" parent="PhysicsSystem3D" unique_id=2041171115 node_paths=PackedStringArray("monitoredComponent")]
+[node name="RotationDeltaDriver" type="Node" parent="PhysicsSystem3D" unique_id=2041171115 node_paths=PackedStringArray("monitoredComponent", "monitoredComponent")]
 script = ExtResource("5_5hamm")
+monitoredComponent = NodePath("../..")
 monitoredComponent = NodePath("../..")
 metadata/_custom_type_script = "uid://dwg6okcjwoey5"

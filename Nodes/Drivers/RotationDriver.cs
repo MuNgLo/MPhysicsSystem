@@ -1,16 +1,13 @@
-using System;
 using Godot;
 namespace MPhysicsSystem;
-
+/// <summary>
+/// 0.5 Uses Velocities
+/// </summary>
 [GlobalClass]
 public partial class RotationDriver : PhysicsSystemComponent, IPhysicsComponent
 {
-	[Export] PhysicsSystemComponent monitoredComponent;
-	[Export] MONITOREDAXIS monitoredAxis = MONITOREDAXIS.Y;
-
 	[Export(PropertyHint.Range, "-50000, 50000, 0.01, radians_as_degrees, suffix:°/s")] float MaxAngle = 0.0f;
 	[Export(PropertyHint.Range, "-50000, 50000, 0.01, radians_as_degrees, suffix:°/s")] float MinAngle = 0.0f;
-
 
 	public override void _Ready()
 	{
@@ -23,7 +20,7 @@ public partial class RotationDriver : PhysicsSystemComponent, IPhysicsComponent
 	}
 
 
- // Tracks accumulated rotation per local axis (radians)
+ 	// Tracks accumulated rotation per local axis (radians)
     private Vector3 cumulativeLocalAngles;
 	float angularVelTweak = 0.0f;
 	public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D initialGlobalTransform)
@@ -37,9 +34,6 @@ public partial class RotationDriver : PhysicsSystemComponent, IPhysicsComponent
 		angularVelTweak = rad / state.Step;
 		localAngularVelocity.Y = angularVelTweak;
 		state.AngularVelocity = state.Transform.Basis * localAngularVelocity;
-    
-		// This line breaks in 4.7 since it will dirty the transform resulting in velocities and forces being dropped
-		//state.Transform = new Transform3D(initialGlobalTransform.Basis * new Basis(Vector3.Up, cumulativeLocalAngles.Y + rad), initialGlobalTransform.Origin);
 	}
 
 	float AxisPosition()
@@ -47,7 +41,7 @@ public partial class RotationDriver : PhysicsSystemComponent, IPhysicsComponent
 		switch (monitoredAxis)
 		{
 			case MONITOREDAXIS.X:
-				return body.Position.Y;
+				return body.Position.X;
 			case MONITOREDAXIS.Z:
 				return body.Position.Z;
 		}
@@ -59,10 +53,10 @@ public partial class RotationDriver : PhysicsSystemComponent, IPhysicsComponent
 		switch (monitoredAxis)
 		{
 			case MONITOREDAXIS.X:
-				return monitoredComponent.DriverValueX;
+				return monitoredComponent.DriverNormalizedValueX;
 			case MONITOREDAXIS.Z:
-				return monitoredComponent.DriverValueZ;
+				return monitoredComponent.DriverNormalizedValueZ;
 		}
-		return monitoredComponent.DriverValueY;
+		return monitoredComponent.DriverNormalizedValueY;
 	}
 }// EOF CLASS

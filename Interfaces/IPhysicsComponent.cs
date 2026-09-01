@@ -8,9 +8,9 @@ public interface IPhysicsComponent
 {
     StringName Name { get; set; }
     NodePath GetPath();
-    float DriverValueX { get; }
-    float DriverValueY { get; }
-    float DriverValueZ { get; }
+    float DriverNormalizedValueX { get; }
+    float DriverNormalizedValueY { get; }
+    float DriverNormalizedValueZ { get; }
     /// <summary>
     /// To get the up to date local transfrom from the initialTransform and state do...<br/>
     /// <br/>

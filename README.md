@@ -4,7 +4,8 @@ v0.3
 
 Component system for stacking constraints, drivers and things to control and manipulate RigidBody3D through the _IntegrateForce
 
-
+0.5 Shifting all to use velocities. Any classes that has been gone through will he documented in Class summary
+0.4 Push
 0.3 4.7 compatible mostly
 0.2 Things are working. Need some cleanup.
 0.1 First upload

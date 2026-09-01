@@ -1,6 +1,8 @@
 using Godot;
 namespace MPhysicsSystem;
-
+/// <summary>
+/// 0.5 Velocity in state local space
+/// </summary>
 [GlobalClass]
 public partial class RotationVelocityConstant : PhysicsSystemComponent, IPhysicsComponent
 {
@@ -44,7 +46,7 @@ public partial class RotationVelocityConstant : PhysicsSystemComponent, IPhysics
 
 	public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D initialGlobalTransform)
 	{
-		Vector3 localAngVel = initialGlobalTransform.Basis.Inverse() * state.AngularVelocity;
+		Vector3 localAngVel = state.Transform.Basis.Inverse() * state.AngularVelocity;
 		localAngVel *= dampening;
 
 		if (axisX)
@@ -61,11 +63,6 @@ public partial class RotationVelocityConstant : PhysicsSystemComponent, IPhysics
 		{
 			localAngVel.Z = float.Lerp(localAngVel.Z, useRelaySpeedAsMultiplier ? VelocityZ * sourceRelay.Speed : VelocityZ, complianceX);
 		}
-
-
-		//GD.Print($"localAngVel[{localAngVel}] AngularVelocity[{AngularVelocity}]");
 		state.AngularVelocity = state.Transform.Basis * localAngVel;
-		//GD.Print($"state.AngularVelocity[{state.AngularVelocity}]");
-
 	}
 }// EOF CLASS

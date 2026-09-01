@@ -1,115 +1,55 @@
-using System;
 using Godot;
 namespace MPhysicsSystem;
-
+/// <summary>
+/// 0.5 Working and uses velocities
+/// </summary>
 [GlobalClass]
 public partial class PositionPingPongDriver : PhysicsSystemComponent, IPhysicsComponent
 {
-    [Export] PhysicsSystemComponent monitoredComponent;
-    [Export] MONITOREDAXIS monitoredAxis = MONITOREDAXIS.Y;
-    [Export] MONITOREDAXIS drivenAxis = MONITOREDAXIS.Y;
+	[Export] MONITOREDAXIS drivenAxis = MONITOREDAXIS.Y;
+	[Export] float maxPosition = 0.0f;
+	[Export] float minPosition = 0.0f;
 
-    [Export] float maxPosition = 0.0f;
-    [Export] float minPosition = 0.0f;
-    [Export] float sensitivity = 1.0f;
-    [Export] bool useRelaySpeedAsMultiplier = false;
+	bool reversed = false;
+	float tickValue = 0.0f;
+	float axisPosition = 0.0f;
 
+	public override void _Ready()
+	{
+		if (GetParent<RigidBody3D>() is IPhysicsSystem physicsSystem)
+		{
+			body = GetParent<RigidBody3D>();
+			physicsSystem.RegisterPhysicsComponent(this);
+		}
+	}
 
+	public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D initialGlobalTransform)
+	{
+		Transform3D localTransform = initialGlobalTransform.Inverse() * state.Transform;
+		Vector3 localLinearVelocity = initialGlobalTransform.Basis.Inverse() * state.LinearVelocity - influence;
+		influence = Vector3.Zero;
+		Vector3 projectedPosition = localTransform.Origin + localLinearVelocity * state.Step;
 
-    private Transform3D initialTransform;
+		axisPosition = projectedPosition[(int)drivenAxis];
 
-    public override void _Ready()
-    {
-        if (GetParent<RigidBody3D>() is IPhysicsSystem physicsSystem)
-        {
-            initialTransform = physicsSystem.GlobalTransform;
-            body = GetParent<RigidBody3D>();
-            physicsSystem.RegisterPhysicsComponent(this);
-        }
-    }
+		if (axisPosition < minPosition) { reversed = true; }
+		if (axisPosition > maxPosition) { reversed = false; }
 
+		if (!reversed)
+		{
+			influence = -MonitoredAxisAsVector(drivenAxis) * MonitoredRotationDelta() / state.Step;
+		}
+		else
+		{
+			influence = MonitoredAxisAsVector(drivenAxis) * MonitoredRotationDelta() / state.Step;
+		}
+		if (debug)
+		{
+			GD.Print($"axisPosition[{axisPosition}] reversed[{reversed}] influence[{influence}]");
+		}
 
-    bool reversed = false;
-    float tickValue = 0.0f;
-    float axixTickValue = 0.0f;
+		localLinearVelocity.X = 0.0f;
 
-    public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D otherTR)
-    {
-        Transform3D localTransform = initialTransform.Inverse() * state.Transform;
-
-        axixTickValue = ResolveAxisValue(localTransform);
-
-        if (!reversed)
-        {
-            tickValue = axixTickValue + MonitoredDeltaValue();
-        }
-        else
-        {
-            tickValue = axixTickValue - MonitoredDeltaValue();
-        }
-        if (tickValue < minPosition || tickValue > maxPosition) { reversed = !reversed; }
-
-        localTransform.Origin[(int)drivenAxis] = Mathf.Clamp(tickValue, minPosition, maxPosition);
-
-        state.Transform = initialTransform * localTransform;
-    }
-
-    private float ResolveAxisValue(Transform3D localTransform)
-    {
-        switch (drivenAxis)
-        {
-            case MONITOREDAXIS.X:
-                return localTransform.Origin.X;
-            case MONITOREDAXIS.Z:
-                return localTransform.Origin.Z;
-        }
-        return localTransform.Origin.Y;
-    }
-
-    float AxisPosition()
-    {
-        switch (monitoredAxis)
-        {
-            case MONITOREDAXIS.X:
-                return body.Position.X;
-            case MONITOREDAXIS.Z:
-                return body.Position.Z;
-        }
-        return body.Position.Y;
-    }
-
-    float MonitoredNormalizedValue()
-    {
-        switch (monitoredAxis)
-        {
-            case MONITOREDAXIS.X:
-                return monitoredComponent.DriverValueX;
-            case MONITOREDAXIS.Z:
-                return monitoredComponent.DriverValueZ;
-        }
-        return monitoredComponent.DriverValueY;
-    }
-    float MonitoredDeltaValue()
-    {
-        switch (monitoredAxis)
-        {
-            case MONITOREDAXIS.X:
-                if (useRelaySpeedAsMultiplier)
-                {
-                    return monitoredComponent.RotationDelta.X * sensitivity * monitoredComponent.Speed;
-                }
-                return monitoredComponent.RotationDelta.X * sensitivity;
-            case MONITOREDAXIS.Z:
-                if (useRelaySpeedAsMultiplier)
-                {
-                    return monitoredComponent.RotationDelta.Z * sensitivity * monitoredComponent.Speed;
-                }
-                return monitoredComponent.RotationDelta.Z * sensitivity;
-        }
-        if (useRelaySpeedAsMultiplier)
-        {
-            return monitoredComponent.RotationDelta.Y * sensitivity * monitoredComponent.Speed;
-        }
-        return monitoredComponent.RotationDelta.Y * sensitivity;
-    }
+		state.LinearVelocity = initialGlobalTransform.Basis * (localLinearVelocity + influence);
+	}
 }// EOF CLASS

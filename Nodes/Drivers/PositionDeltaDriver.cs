@@ -1,57 +1,26 @@
 using System;
 using Godot;
 namespace MPhysicsSystem;
+/// <summary>
+/// 0.5 Fixed so it doesn't touch the state.transform. But untested
+/// </summary>
 [GlobalClass]
 public partial class PositionDeltaDriver : PhysicsSystemComponent, IPhysicsComponent
 {
-    [Export] PhysicsSystemComponent deltaProvider;
-    [Export] MONITOREDAXIS monitoredAxis = MONITOREDAXIS.Y;
-
-    [Export] float maxPosition = 0.0f;
-    [Export] float minPosition = 0.0f;
-    [Export] float sensitivity = 1.0f;
-
-    private Transform3D initialTransform;
+	Vector3 influence = Vector3.Zero;
 
     public override void _Ready()
     {
         if (GetParent<RigidBody3D>() is IPhysicsSystem physicsSystem)
         {
-           	initialTransform = physicsSystem.GlobalTransform;
             body = GetParent<RigidBody3D>();
             physicsSystem.RegisterPhysicsComponent(this);
         }
     }
-
-    public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D otherTR)
+    public void IntegrateForces(PhysicsDirectBodyState3D state, Transform3D initialGlobalTransform)
     {
-        Transform3D localTR = initialTransform.Inverse() * state.Transform;
-        //GD.Print($"Current Y [{localTR.Origin.Y}] new [{Mathf.Clamp(localTR.Origin.Y + MonitoredValue(), minPosition, maxPosition)}] MonitoredValue[{MonitoredValue()}]");
-        localTR.Origin.Y = Mathf.Clamp(localTR.Origin.Y + MonitoredValue(), minPosition, maxPosition);
-        state.Transform = initialTransform * localTR;
-    }
-
-    float AxisPosition()
-    {
-        switch (monitoredAxis)
-        {
-            case MONITOREDAXIS.X:
-                return body.Position.Y;
-            case MONITOREDAXIS.Z:
-                return body.Position.Z;
-        }
-        return body.Position.Y;
-    }
-
-    float MonitoredValue()
-    {
-        switch (monitoredAxis)
-        {
-            case MONITOREDAXIS.X:
-                return deltaProvider.RotationDelta.X * sensitivity;
-            case MONITOREDAXIS.Z:
-                return deltaProvider.RotationDelta.Z * sensitivity;
-        }
-        return deltaProvider.RotationDelta.Y * sensitivity;
+		Vector3 localLinearVelocity = initialGlobalTransform.Basis.Inverse() * state.LinearVelocity - influence;
+		influence = Vector3.Up * DeltaProviderRotation();
+		state.LinearVelocity = initialGlobalTransform.Basis * (localLinearVelocity + influence);
     }
 }// EOF CLASS
